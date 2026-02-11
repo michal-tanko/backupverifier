@@ -1,3 +1,4 @@
+import re
 import sys
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
@@ -145,14 +146,18 @@ class CSVViewerApp:
             if missing_columns:
                 raise ValueError("Missing columns: {}".format(missing_columns))
             
-            # Get file creation time
+            # Get report date from filename (format _YYYY-MM-DD_)
             try:
-                timestamp = os.path.getctime(file_path)
-                datetime_object = datetime.fromtimestamp(timestamp)
-                self.date_of_report = datetime_object.strftime("%m/%d/%Y %I:%M:%S%p")
-                self.date_of_report = datetime.strptime(self.date_of_report, "%m/%d/%Y %I:%M:%S%p")
+                filename = os.path.basename(file_path)
+                match = re.search(r"_(\d{4}-\d{2}-\d{2})_", filename)
+                if not match:
+                    raise ValueError(f"Filename does not contain date in format _YYYY-MM-DD_: {filename}")
+                self.date_of_report = datetime.strptime(match.group(1), "%Y-%m-%d")
+            except ValueError as e:
+                tk.messagebox.showerror("Error", str(e))
+                raise
             except Exception as e:
-                tk.messagebox.showerror("Error", "Could not retrieve or parse file creation date. Please contact administrator.")
+                tk.messagebox.showerror("Error", "Could not parse date from filename. Please contact administrator.")
                 raise e
                 
 
