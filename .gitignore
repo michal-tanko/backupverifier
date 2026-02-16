@@ -13,4 +13,4 @@ build/BackupVerifier/localpycs/pyimod03_ctypes.pyc
 build/BackupVerifier/localpycs/pyimod04_pywin32.pyc
 build/BackupVerifier/localpycs/struct.pyc
 BackupVerifier.spec
-dist/BackupVerifier.exe
+dist/*
