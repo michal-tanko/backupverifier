@@ -1,0 +1,16 @@
+build/BackupVerifier/Analysis-00.toc
+build/BackupVerifier/BackupVerifier.pkg
+build/BackupVerifier/base_library.zip
+build/BackupVerifier/EXE-00.toc
+build/BackupVerifier/PKG-00.toc
+build/BackupVerifier/PYZ-00.pyz
+build/BackupVerifier/PYZ-00.toc
+build/BackupVerifier/warn-BackupVerifier.txt
+build/BackupVerifier/xref-BackupVerifier.html
+build/BackupVerifier/localpycs/pyimod01_archive.pyc
+build/BackupVerifier/localpycs/pyimod02_importers.pyc
+build/BackupVerifier/localpycs/pyimod03_ctypes.pyc
+build/BackupVerifier/localpycs/pyimod04_pywin32.pyc
+build/BackupVerifier/localpycs/struct.pyc
+BackupVerifier.spec
+dist/BackupVerifier.exe

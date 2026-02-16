@@ -7,11 +7,14 @@ from functools import partial
 import os
 from datetime import datetime, timedelta
 from dateutil import parser
+from dateutil.parser import ParserError
+
+__version__ = "2.2"
 
 class CSVViewerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Backup Verifier")
+        self.root.title(f"Backup Verifier [v{__version__}]")
         self.root.state('zoomed')
         self.df = None
         self.filter_values = {}
@@ -128,7 +131,7 @@ class CSVViewerApp:
         )
         if self.file_path:
             try:
-                self.root.title(f"Backup Verifier - {os.path.basename(self.file_path)}")
+                self.root.title(f"Backup Verifier [v{__version__}] - {os.path.basename(self.file_path)}")
                 self.df = self.read_csv_file(self.file_path)
                 self.original_data = self.df.values.tolist()
                 self.populate_table(self.df)
@@ -267,7 +270,7 @@ class CSVViewerApp:
         for index, col in enumerate(df.columns):
             self.tree.heading(col, text=col, command=partial(self.sort_column, col))
             self.tree.column(col, stretch=True)
-            unique_values = [""] + sorted(list(df[col].astype(str).unique()))
+            unique_values = [""] + sorted(list(df[col].astype(str).unique()), key=str)
             combobox = ttk.Combobox(self.filter_frame, values=unique_values, state="readonly")
             combobox.pack(side="left", fill="x", expand=True)
             self.filter_comboboxes[col] = combobox
@@ -365,7 +368,7 @@ class CSVViewerApp:
         for col, combobox in self.filter_comboboxes.items():
             unique_values = [""]
             if not filtered_df.empty:
-                 unique_values += sorted(list(filtered_df[col].astype(str).unique()))
+                 unique_values += sorted(list(filtered_df[col].astype(str).unique()), key=str)
             combobox['values'] = unique_values
 
     def clear_filters(self):
@@ -385,8 +388,9 @@ class CSVViewerApp:
         # Get current sort direction for the column (True=ascending, False=descending)
         ascending = self.sort_directions.get(col, True)
 
-        # Sort dataframe by column and direction
-        filtered_df = filtered_df.sort_values(by=col, ascending=ascending)
+        # Sort by string representation to avoid str/float comparison errors
+        sort_col = filtered_df[col].astype(str)
+        filtered_df = filtered_df.assign(_sort_key=sort_col).sort_values(by="_sort_key", ascending=ascending).drop(columns=["_sort_key"])
                                                         
                 
                                                         
